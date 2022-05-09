@@ -1,4 +1,5 @@
 use crate::{Repainter, Runtime};
+use eframe::egui::CentralPanel;
 
 pub struct WindowOptions {
     /// The window title
@@ -25,10 +26,11 @@ pub struct UpdateContext<'u> {
     pub repainter: &'u Repainter,
     pub ctx: &'u eframe::egui::Context,
     pub frame: &'u mut eframe::Frame,
+    pub ui: &'u mut eframe::egui::Ui,
 }
 
 pub trait App {
-    fn update(&mut self, ctx: UpdateContext);
+    fn render(&mut self, ctx: UpdateContext);
 }
 
 pub(crate) struct Application {
@@ -64,12 +66,15 @@ impl Application {
 
 impl eframe::App for Application {
     fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
-        let ctx = UpdateContext {
-            ctx,
-            frame,
-            repainter: &self.repainter,
-            runtime: &self.runtime,
-        };
-        self.app.update(ctx);
+        CentralPanel::default().show(ctx, |ui| {
+            let ctx = UpdateContext {
+                ctx,
+                frame,
+                repainter: &self.repainter,
+                runtime: &self.runtime,
+                ui,
+            };
+            self.app.render(ctx);
+        });
     }
 }

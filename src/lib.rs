@@ -4,12 +4,10 @@
 extern crate tracing;
 
 mod app;
-mod page;
 mod repaint;
 mod runtime;
 
 pub use app::{App, UpdateContext, WindowOptions};
-pub use page::Page;
 pub use repaint::Repainter;
 pub use runtime::Runtime;
 

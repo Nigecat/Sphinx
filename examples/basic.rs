@@ -15,8 +15,9 @@ impl Default for Basic {
 }
 
 impl sphinx::App for Basic {
-    fn update(&mut self, ctx: UpdateContext) {
-        // todo
+    fn render(&mut self, ctx: UpdateContext) {
+        let UpdateContext { ui, .. } = ctx;
+        ui.label(self.message);
     }
 }
 
