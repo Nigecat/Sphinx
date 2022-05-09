@@ -23,7 +23,7 @@ impl Runtime {
     where
         F: Future + Send + 'static,
         F::Output: Send + 'static,
-        C: FnOnce(F::Output) -> () + Send + 'static,
+        C: FnOnce(F::Output) + Send + 'static,
     {
         let repainter = self.repainter.clone();
         self.inner.spawn(async move {

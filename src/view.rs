@@ -20,12 +20,12 @@ impl View {
         self.top_enabled = false;
     }
 
-    /// Enable the top bar ([`Page::bottom`]). 
+    /// Enable the top bar ([`Page::bottom`]).
     pub fn enable_bottom(&mut self) {
         self.bottom_enabled = true;
     }
 
-    /// Disable the top bar ([`Page::bottom`]). 
+    /// Disable the top bar ([`Page::bottom`]).
     pub fn disable_bottom(&mut self) {
         self.bottom_enabled = false;
     }

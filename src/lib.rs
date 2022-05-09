@@ -1,5 +1,7 @@
 //! A thin wrapper around egui to provide basic page switching and other utilities along with an async runtime.
 
+#![forbid(unsafe_code)]
+
 #[macro_use]
 extern crate tracing;
 

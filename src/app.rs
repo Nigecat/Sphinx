@@ -7,16 +7,19 @@ pub struct WindowOptions {
     pub title: String,
 
     /// Disable the top bar ([`Page::top`]), useful if you are not displaying anything there.
+    ///
     /// This can be changed at runtime with [`View::enable_top`] / [`View::disable_top`].
     pub disable_top: bool,
     /// Disable the bottom bar ([`Page::bottom`]), useful if you are not displaying anything there.
+    ///
     /// This can be changed at runtime with [`View::enable_bottom`] / [`View::disable_bottom`].
     pub disable_bottom: bool,
 }
 
 impl WindowOptions {
-    /// Create a window with a single section ([`Page::render`]), this will disable both ([`Page::top`]) and ([`Page::bottom`]).
-    /// These can be enabled at runtime with [`View::enable_top`] / [`View::disable_top`] or View::enable_bottom`] / [`View::disable_bottom`] respectively.
+    /// Create a window with a single section ([`Page::render`]), this will disable both the top bar ([`Page::top`]) and bottom bar ([`Page::bottom`]).
+    ///
+    /// These can be enabled at runtime with [`View::enable_top`] / [`View::disable_top`] or [`View::enable_bottom`] / [`View::disable_bottom`] respectively.
     pub fn single() -> Self {
         WindowOptions {
             disable_top: true,
