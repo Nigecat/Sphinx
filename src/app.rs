@@ -1,5 +1,5 @@
 use crate::{Page, Repainter, Runtime};
-use eframe::egui::CentralPanel;
+use eframe::egui::{CentralPanel, TopBottomPanel, Ui};
 
 pub struct WindowOptions {
     /// The window title
@@ -26,7 +26,7 @@ pub struct UpdateContext<'u> {
     pub repainter: &'u Repainter,
     pub ctx: &'u eframe::egui::Context,
     pub frame: &'u mut eframe::Frame,
-    pub ui: &'u mut eframe::egui::Ui,
+    pub ui: &'u mut Ui,
 }
 
 pub trait App {
@@ -73,31 +73,37 @@ impl Application {
 
 impl eframe::App for Application {
     fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
-        CentralPanel::default().show(ctx, |ui| {
-            let name = self.page.name();
-            let _span = span!(tracing::Level::DEBUG, "{}", name).entered();
+        let name = self.page.name();
+        let _span = span!(tracing::Level::DEBUG, "{}", name).entered();
 
-            let ctx = UpdateContext {
-                ctx,
-                frame,
-                repainter: &self.repainter,
-                runtime: &self.runtime,
-                ui,
-            };
+        macro_rules! bind {
+            ($ui: ident, $method: ident) => {{
+                let ctx = UpdateContext {
+                    ctx,
+                    frame,
+                    repainter: &self.repainter,
+                    runtime: &self.runtime,
+                    ui: $ui,
+                };
 
-            let res = self.page.render(ctx);
-            match res {
-                Ok(page) => {
-                    if let Some(page) = page {
-                        info!("Switched to page: {:?}", page.name());
-                        self.page = page;
+                let res = self.page.$method(ctx);
+                match res {
+                    Ok(page) => {
+                        if let Some(page) = page {
+                            info!("Switched to page: {:?}", page.name());
+                            self.page = page;
+                        }
                     }
-                }
-                Err(err) => {
-                    error!("{:?}", err);
-                    self.error = Some(err)
-                }
-            };
-        });
+                    Err(err) => {
+                        error!("{:?}", err);
+                        self.error = Some(err)
+                    }
+                };
+            }};
+        }
+
+        CentralPanel::default().show(ctx, |ui| bind!(ui, render));
+        TopBottomPanel::top("top").show(ctx, |ui| bind!(ui, top));
+        TopBottomPanel::bottom("bottom").show(ctx, |ui| bind!(ui, bottom));
     }
 }

@@ -15,5 +15,15 @@ pub trait Page {
     /// The name of the page, this is used for error reporting and logging
     fn name(&self) -> &str;
 
-    fn render(&mut self, ctx: UpdateContext) -> Switch;
+    fn top(&mut self, _ctx: UpdateContext) -> Switch {
+        Ok(None)
+    }
+
+    fn render(&mut self, _ctx: UpdateContext) -> Switch {
+        Ok(None)
+    }
+
+    fn bottom(&mut self, _ctx: UpdateContext) -> Switch {
+        Ok(None)
+    }
 }
