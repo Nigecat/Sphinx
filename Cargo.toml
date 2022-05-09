@@ -4,3 +4,8 @@ version = "0.0.1"
 edition = "2021"
 
 [dependencies]
+tracing = "0.1"
+thiserror = "1.0"
+
+eframe = "0.18.0"
+tokio = { version = "1", features = ["rt", "rt-multi-thread"] }
