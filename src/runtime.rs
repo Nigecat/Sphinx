@@ -1,7 +1,7 @@
 use crate::Repainter;
 use std::future::Future;
 
-/// The async runtime
+/// The async runtime.
 pub struct Runtime {
     repainter: Repainter,
     inner: tokio::runtime::Runtime,

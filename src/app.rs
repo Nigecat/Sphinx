@@ -1,15 +1,37 @@
-use crate::{Page, Repainter, Runtime};
+use crate::{Page, Repainter, Runtime, View};
 use eframe::egui::{CentralPanel, TopBottomPanel, Ui};
 
+/// The options to create the application window with.
 pub struct WindowOptions {
     /// The window title
     pub title: String,
+
+    /// Disable the top bar ([`Page::top`]), useful if you are not displaying anything there.
+    /// This can be changed at runtime with [`View::enable_top`] / [`View::disable_top`].
+    pub disable_top: bool,
+    /// Disable the bottom bar ([`Page::bottom`]), useful if you are not displaying anything there.
+    /// This can be changed at runtime with [`View::enable_bottom`] / [`View::disable_bottom`].
+    pub disable_bottom: bool,
 }
 
 impl WindowOptions {
-    /// Convert these options into the native options along with the title
-    fn collapse(self) -> (String, eframe::NativeOptions) {
-        (self.title, Default::default())
+    /// Create a window with a single section ([`Page::render`]), this will disable both ([`Page::top`]) and ([`Page::bottom`]).
+    /// These can be enabled at runtime with [`View::enable_top`] / [`View::disable_top`] or View::enable_bottom`] / [`View::disable_bottom`] respectively.
+    pub fn single() -> Self {
+        WindowOptions {
+            disable_top: true,
+            disable_bottom: true,
+            ..Self::default()
+        }
+    }
+
+    /// Convert these options into the native options along with the title and view information
+    fn collapse(self) -> (String, eframe::NativeOptions, View) {
+        let view = View {
+            top_enabled: !self.disable_top,
+            bottom_enabled: !self.disable_bottom,
+        };
+        (self.title, Default::default(), view)
     }
 }
 
@@ -17,16 +39,20 @@ impl Default for WindowOptions {
     fn default() -> Self {
         WindowOptions {
             title: env!("CARGO_PKG_NAME").to_string(),
+            disable_top: false,
+            disable_bottom: false,
         }
     }
 }
 
+/// The data given when the renderer must provide an update.
 pub struct UpdateContext<'u> {
     pub runtime: &'u Runtime,
     pub repainter: &'u Repainter,
     pub ctx: &'u eframe::egui::Context,
     pub frame: &'u mut eframe::Frame,
     pub ui: &'u mut Ui,
+    pub view: &'u mut View,
 }
 
 pub trait App {
@@ -38,13 +64,14 @@ pub(crate) struct Application {
     page: Box<dyn Page>,
     repainter: Repainter,
     runtime: Runtime,
+    view: View,
     error: Option<Box<dyn ::std::error::Error>>,
 }
 
 impl Application {
     pub fn run<A: App + 'static>(app: A, options: WindowOptions) -> ! {
         let mut app: Box<dyn App> = Box::new(app);
-        let (app_name, native_options) = options.collapse();
+        let (app_name, native_options, view) = options.collapse();
 
         eframe::run_native(
             &app_name,
@@ -60,6 +87,7 @@ impl Application {
                     repainter,
                     runtime,
                     error: None,
+                    view,
                 };
 
                 let name = application.page.name();
@@ -84,6 +112,7 @@ impl eframe::App for Application {
                     repainter: &self.repainter,
                     runtime: &self.runtime,
                     ui: $ui,
+                    view: &mut self.view,
                 };
 
                 let res = self.page.$method(ctx);
@@ -102,8 +131,14 @@ impl eframe::App for Application {
             }};
         }
 
+        if self.view.top_enabled {
+            TopBottomPanel::top("top").show(ctx, |ui| bind!(ui, top));
+        }
+
+        if self.view.bottom_enabled {
+            TopBottomPanel::bottom("bottom").show(ctx, |ui| bind!(ui, bottom));
+        }
+
         CentralPanel::default().show(ctx, |ui| bind!(ui, render));
-        TopBottomPanel::top("top").show(ctx, |ui| bind!(ui, top));
-        TopBottomPanel::bottom("bottom").show(ctx, |ui| bind!(ui, bottom));
     }
 }

@@ -54,5 +54,5 @@ impl sphinx::Page for PageB {
 
 fn main() {
     tracing_subscriber::fmt().init();
-    sphinx::run(App, sphinx::WindowOptions::default());
+    sphinx::run(App, sphinx::WindowOptions::single());
 }
