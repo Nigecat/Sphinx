@@ -9,3 +9,6 @@ thiserror = "1.0"
 
 eframe = "0.18.0"
 tokio = { version = "1", features = ["rt", "rt-multi-thread"] }
+
+[dev-dependencies]
+tracing-subscriber = "0.3.11"

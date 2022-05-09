@@ -1,4 +1,4 @@
-use crate::{Repainter, Runtime};
+use crate::{Page, Repainter, Runtime};
 use eframe::egui::CentralPanel;
 
 pub struct WindowOptions {
@@ -30,18 +30,20 @@ pub struct UpdateContext<'u> {
 }
 
 pub trait App {
-    fn render(&mut self, ctx: UpdateContext);
+    fn initial_page(&mut self) -> Box<dyn Page>;
 }
 
 pub(crate) struct Application {
     app: Box<dyn App>,
+    page: Box<dyn Page>,
     repainter: Repainter,
     runtime: Runtime,
+    error: Option<Box<dyn ::std::error::Error>>,
 }
 
 impl Application {
     pub fn run<A: App + 'static>(app: A, options: WindowOptions) -> ! {
-        let app: Box<dyn App> = Box::new(app);
+        let mut app: Box<dyn App> = Box::new(app);
         let (app_name, native_options) = options.collapse();
 
         eframe::run_native(
@@ -53,10 +55,15 @@ impl Application {
                     Runtime::new(repainter.clone()).expect("unable to start async runtime");
 
                 let application = Application {
+                    page: app.initial_page(),
                     app,
                     repainter,
                     runtime,
+                    error: None,
                 };
+
+                let name = application.page.name();
+                info!("Starting with page: {:?}", name);
 
                 Box::new(application)
             }),
@@ -67,6 +74,9 @@ impl Application {
 impl eframe::App for Application {
     fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
         CentralPanel::default().show(ctx, |ui| {
+            let name = self.page.name();
+            let _span = span!(tracing::Level::DEBUG, "{}", name).entered();
+
             let ctx = UpdateContext {
                 ctx,
                 frame,
@@ -74,7 +84,20 @@ impl eframe::App for Application {
                 runtime: &self.runtime,
                 ui,
             };
-            self.app.render(ctx);
+
+            let res = self.page.render(ctx);
+            match res {
+                Ok(page) => {
+                    if let Some(page) = page {
+                        info!("Switched to page: {:?}", page.name());
+                        self.page = page;
+                    }
+                }
+                Err(err) => {
+                    error!("{:?}", err);
+                    self.error = Some(err)
+                }
+            };
         });
     }
 }

@@ -1,27 +1,58 @@
-//! A basic example which simple displays a static message
-
 use sphinx::UpdateContext;
 
-struct Basic {
-    message: &'static str,
-}
+struct App;
 
-impl Default for Basic {
-    fn default() -> Self {
-        Basic {
-            message: "Hello, World!",
-        }
+impl sphinx::App for App {
+    fn initial_page(&mut self) -> Box<dyn sphinx::Page> {
+        Box::new(PageA::default())
     }
 }
 
-impl sphinx::App for Basic {
-    fn render(&mut self, ctx: UpdateContext) {
+struct PageA;
+
+impl sphinx::Page for PageA {
+    fn name(&self) -> &str {
+        "demo-page-a"
+    }
+
+    fn render(&mut self, ctx: UpdateContext) -> sphinx::Switch {
         let UpdateContext { ui, .. } = ctx;
-        ui.label(self.message);
+        ui.label("Page A");
+
+        if ui.button("Switch").clicked() {
+            sphinx::switch_to_page!(PageB);
+        }
+
+        Ok(None)
+    }
+}
+
+impl Default for PageA {
+    fn default() -> Self {
+        PageA
+    }
+}
+
+struct PageB;
+
+impl sphinx::Page for PageB {
+    fn name(&self) -> &str {
+        "demo-page-b"
+    }
+
+    fn render(&mut self, ctx: UpdateContext) -> sphinx::Switch {
+        let UpdateContext { ui, .. } = ctx;
+        ui.label("Page B");
+
+        if ui.button("Switch").clicked() {
+            sphinx::switch_to_page!(PageA);
+        }
+
+        Ok(None)
     }
 }
 
 fn main() {
-    let app = Basic::default();
-    sphinx::run(app, sphinx::WindowOptions::default());
+    tracing_subscriber::fmt().init();
+    sphinx::run(App, sphinx::WindowOptions::default());
 }
