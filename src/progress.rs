@@ -51,7 +51,7 @@ impl ProgressUi {
 
     /// Check if the progress bar is at 100%
     pub fn complete(&mut self) -> bool {
-        self.progress == 1.0
+        (self.progress - 1.0).abs() < f32::EPSILON
     }
 }
 
@@ -67,6 +67,7 @@ pub struct ProgressView<I: Iterator> {
 }
 
 /// Create a matching [`ProgressUi`] and [`ProgressAdapter`].
+#[must_use]
 pub fn create(repainter: crate::Repainter) -> (ProgressUi, ProgressAdapter) {
     let (sender, receiver) = mpsc::channel::<f32>();
     (

@@ -40,7 +40,7 @@ impl WindowOptions {
         let view = View {
             top_enabled: !self.disable_top,
             bottom_enabled: !self.disable_bottom,
-            ..Default::default()
+            ..View::default()
         };
         (self.title, self.native, view)
     }
@@ -53,7 +53,7 @@ impl Default for WindowOptions {
             disable_top: false,
             disable_bottom: false,
             theme: Theme::default(),
-            native: Default::default(),
+            native: eframe::NativeOptions::default(),
         }
     }
 }

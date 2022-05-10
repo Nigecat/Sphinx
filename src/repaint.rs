@@ -13,6 +13,6 @@ impl Repainter {
 
     /// Request a repaint to the renderer.
     pub fn request_repaint(&self) {
-        self.ctx.request_repaint()
+        self.ctx.request_repaint();
     }
 }

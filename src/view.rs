@@ -12,7 +12,7 @@ pub enum Theme {
 }
 
 impl Theme {
-    pub(crate) fn visuals(&self) -> eframe::egui::Visuals {
+    pub(crate) fn visuals(self) -> eframe::egui::Visuals {
         match self {
             Theme::Dark => eframe::egui::Visuals::dark(),
             Theme::Light => eframe::egui::Visuals::light(),
