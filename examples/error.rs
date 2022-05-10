@@ -19,11 +19,10 @@ impl sphinx::Page for ErrorExamplePage {
     }
 
     fn render(&mut self, _ctx: sphinx::UpdateContext) -> sphinx::Switch {
-        Err(std::io::Error::new(
+        Err(Box::new(std::io::Error::new(
             std::io::ErrorKind::Unsupported,
             "demonstration error",
-        ))?;
-        sphinx::ok!();
+        )))
     }
 }
 
