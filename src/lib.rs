@@ -1,6 +1,7 @@
 //! A thin wrapper around egui to provide basic page switching and other utilities along with an async runtime.
 
 #![forbid(unsafe_code)]
+#![warn(missing_docs)]
 
 #[macro_use]
 extern crate tracing;
@@ -18,14 +19,17 @@ pub use repaint::Repainter;
 pub use runtime::Runtime;
 pub use view::{Theme, View};
 
+#[doc(hidden)]
 pub use eframe::egui as raw;
 pub use eframe::egui::emath as math;
 pub use eframe::egui::epaint as paint;
-pub use eframe::egui::{Context, Layout, Pos2, Rect, Vec2};
+pub use eframe::egui::widgets;
+pub use eframe::egui::{Color32, Context, Event, Key, Layout, Pos2, Rect, Sense, Ui, Vec2, Widget};
 pub use eframe::{glow, Frame, IconData, NativeOptions};
 
 pub use thiserror::Error;
 
+/// Start a window with the given application and options.
 pub fn run<A: App + 'static>(app: A, options: WindowOptions) -> ! {
     app::Application::run(app, options)
 }

@@ -1,5 +1,8 @@
 use crate::UpdateContext;
+#[allow(unused_imports)] // used for doc comments
+use crate::{View, WindowOptions};
 
+/// Call this to indicate a page render executed successfully.
 #[macro_export]
 macro_rules! ok {
     () => {
@@ -7,6 +10,7 @@ macro_rules! ok {
     };
 }
 
+/// Switch to the given page, the given object must implement the [`Page`] trait.
 #[macro_export]
 macro_rules! switch_to_page {
     ($page: ident) => {
@@ -16,8 +20,13 @@ macro_rules! switch_to_page {
     };
 }
 
+/// The result of a page render.
+///
+/// Call [`switch_to_page`] to switch to a different page,
+/// otherwise, [`ok`] should be called (note that any error can be returned from this to be displayed by the renderer).
 pub type Switch = Result<Option<Box<dyn Page>>, Box<dyn ::std::error::Error>>;
 
+/// A page capable of being rendered.
 pub trait Page {
     /// The name of the page, this is used for error reporting and logging
     fn name(&self) -> &str;
@@ -29,14 +38,21 @@ pub trait Page {
         Ok(None)
     }
 
+    /// The top bar.
+    ///
+    /// This can be disabled at runtime with [`View::disable_top`] or at startup with [`WindowOptions::disable_top`].
     fn top(&mut self, _ctx: UpdateContext) -> Switch {
         Ok(None)
     }
 
+    /// The main content section.
     fn render(&mut self, _ctx: UpdateContext) -> Switch {
         Ok(None)
     }
 
+    /// The bottom bar.
+    ///
+    /// This can be disabled at runtime with [`View::disable_bottom`] or at startup with [`WindowOptions::disable_bottom`].
     fn bottom(&mut self, _ctx: UpdateContext) -> Switch {
         Ok(None)
     }

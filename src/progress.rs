@@ -3,6 +3,8 @@
 use eframe::egui::{ProgressBar, Spinner};
 use std::sync::mpsc;
 
+/// The user interface of the progress widget.
+/// This can either be rendered as a [`ProgressBar`] or [`Spinner`].
 pub struct ProgressUi {
     repainter: crate::Repainter,
     progress: f32,
@@ -53,14 +55,18 @@ impl ProgressUi {
     }
 }
 
+/// The iterator adapter for a [`ProgressUi`].
+/// Give this to [`ShowProgress::show_progress`] to be able to render the progress state.
 pub struct ProgressAdapter(mpsc::Sender<f32>);
 
+/// An iterator which sends its position to a [`ProgressUi`].
 pub struct ProgressView<I: Iterator> {
     length: usize,
     inner: I,
     update: mpsc::Sender<f32>,
 }
 
+/// Create a matching [`ProgressUi`] and [`ProgressAdapter`].
 pub fn create(repainter: crate::Repainter) -> (ProgressUi, ProgressAdapter) {
     let (sender, receiver) = mpsc::channel::<f32>();
     (
@@ -73,7 +79,9 @@ pub fn create(repainter: crate::Repainter) -> (ProgressUi, ProgressAdapter) {
     )
 }
 
+/// Show a progress bar for the given iterator.
 pub trait ShowProgress<I: Iterator> {
+    /// Bind the given adapter to this progress view.
     fn show_progress(self, adapter: ProgressAdapter) -> ProgressView<I>;
 }
 

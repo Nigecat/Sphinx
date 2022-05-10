@@ -19,6 +19,7 @@ impl Runtime {
         })
     }
 
+    /// Execute the given future in the async runtime.
     pub fn execute<F, C>(&self, future: F, on_complete: C)
     where
         F: Future + Send + 'static,

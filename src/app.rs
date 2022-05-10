@@ -60,15 +60,23 @@ impl Default for WindowOptions {
 
 /// The data given when the renderer must provide an update.
 pub struct UpdateContext<'u> {
+    /// The async runtime.
     pub runtime: &'u Runtime,
+    /// An object capable of requesting a repaint.
     pub repainter: &'u Repainter,
+    /// The internal render context.
     pub ctx: &'u eframe::egui::Context,
+    /// The render frame.
     pub frame: &'u mut eframe::Frame,
+    /// The ui to render into.
     pub ui: &'u mut Ui,
+    /// The application view.
     pub view: &'u mut View,
 }
 
+/// An application.
 pub trait App {
+    /// The inital page the application should open.
     fn initial_page(&mut self) -> Box<dyn Page>;
 }
 
