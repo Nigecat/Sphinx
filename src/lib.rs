@@ -12,6 +12,7 @@ pub mod progress;
 mod repaint;
 mod runtime;
 mod view;
+pub mod widgets;
 
 pub use app::{App, UpdateContext, WindowOptions};
 pub use page::{Page, Switch};
@@ -23,7 +24,6 @@ pub use view::{Theme, View};
 pub use eframe::egui as raw;
 pub use eframe::egui::emath as math;
 pub use eframe::egui::epaint as paint;
-pub use eframe::egui::widgets;
 pub use eframe::egui::{Color32, Context, Event, Key, Layout, Pos2, Rect, Sense, Ui, Vec2, Widget};
 pub use eframe::{glow, Frame, IconData, NativeOptions};
 

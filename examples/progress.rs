@@ -50,9 +50,9 @@ impl sphinx::Page for Page {
             self.progress = Some(progress);
             runtime.execute(
                 async move {
-                    for _ in (0..10).into_iter().show_progress(adapter) {
+                    for i in (0..10).into_iter().show_progress(adapter) {
                         ::std::thread::sleep(::std::time::Duration::from_secs(1));
-                        println!("tick");
+                        println!("{}", i);
                     }
                 },
                 |_| println!("done!"),
