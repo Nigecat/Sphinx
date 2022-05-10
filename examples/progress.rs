@@ -32,6 +32,12 @@ impl sphinx::Page for Page {
         } = ctx;
 
         if let Some(ref mut progress) = self.progress {
+            if progress.complete() {
+                if ui.button("Reset").clicked() {
+                    self.run = false;
+                }
+            }
+
             if let Some(bar) = progress.bar() {
                 bar.ui(ui);
             }
@@ -50,8 +56,8 @@ impl sphinx::Page for Page {
             self.progress = Some(progress);
             runtime.execute(
                 async move {
-                    for i in (0..10).into_iter().show_progress(adapter) {
-                        ::std::thread::sleep(::std::time::Duration::from_secs(1));
+                    for i in (0..100).into_iter().show_progress(adapter) {
+                        ::std::thread::sleep(::std::time::Duration::from_millis(25));
                         println!("{}", i);
                     }
                 },
