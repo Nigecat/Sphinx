@@ -134,6 +134,29 @@ impl eframe::App for Application {
             }};
         }
 
+        if let Some(ref err) = self.error {
+            let err = err.to_string();
+            eframe::egui::Window::new("Error").show(ctx, |ui| {
+                ui.label(&format!("{}", err));
+                if ui.button("Ok").clicked() {
+                    self.error = None;
+                }
+            });
+
+            // Create blank pannels to ensure ui does not shift (this additionally ensures background colour is correct)
+            if self.view.top_enabled {
+                TopBottomPanel::top("top").show(ctx, |_| {});
+            }
+
+            if self.view.bottom_enabled {
+                TopBottomPanel::bottom("bottom").show(ctx, |_| {});
+            }
+
+            CentralPanel::default().show(ctx, |_| {});
+
+            return;
+        }
+
         if self.view.top_enabled {
             TopBottomPanel::top("top").show(ctx, |ui| bind!(ui, top));
         }
