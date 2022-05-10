@@ -20,9 +20,8 @@ pub use view::{Theme, View};
 
 pub use eframe::egui::emath as math;
 pub use eframe::egui::epaint as paint;
-pub use eframe::egui::{Context, Layout, Rect};
-pub use eframe::glow;
-pub use eframe::Frame;
+pub use eframe::egui::{Context, Layout, Pos2, Rect, Vec2};
+pub use eframe::{glow, Frame, IconData, NativeOptions};
 
 pub use thiserror::Error;
 

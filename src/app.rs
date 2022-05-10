@@ -13,10 +13,14 @@ pub struct WindowOptions {
     ///
     /// This can be changed at runtime with [`View::enable_top`] / [`View::disable_top`].
     pub disable_top: bool,
+
     /// Disable the bottom bar ([`Page::bottom`]), useful if you are not displaying anything there.
     ///
     /// This can be changed at runtime with [`View::enable_bottom`] / [`View::disable_bottom`].
     pub disable_bottom: bool,
+
+    /// The native integration options.
+    pub native: crate::NativeOptions,
 }
 
 impl WindowOptions {
@@ -38,7 +42,7 @@ impl WindowOptions {
             bottom_enabled: !self.disable_bottom,
             ..Default::default()
         };
-        (self.title, Default::default(), view)
+        (self.title, self.native, view)
     }
 }
 
@@ -48,7 +52,8 @@ impl Default for WindowOptions {
             title: env!("CARGO_PKG_NAME").to_string(),
             disable_top: false,
             disable_bottom: false,
-            theme: Theme::Dark,
+            theme: Theme::default(),
+            native: Default::default(),
         }
     }
 }
