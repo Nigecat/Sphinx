@@ -1,10 +1,20 @@
 #[allow(unused_imports)] // used for doc comments
 use crate::Page;
 
+#[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Theme {
     Light,
     Dark,
+}
+
+impl Theme {
+    pub(crate) fn visuals(&self) -> eframe::egui::Visuals {
+        match self {
+            Theme::Dark => eframe::egui::Visuals::dark(),
+            Theme::Light => eframe::egui::Visuals::light(),
+        }
+    }
 }
 
 impl Default for Theme {
@@ -44,8 +54,15 @@ impl View {
         self.bottom_enabled = false;
     }
 
-    pub fn set_theme(&mut self, theme: Theme) {
+    /// Get the current theme.
+    pub fn current_theme(&self) -> Theme {
+        self.theme
+    }
+
+    /// Update the current theme.
+    pub fn set_theme(&mut self, theme: Theme, ctx: &eframe::egui::Context) {
         self.theme = theme;
+        ctx.set_visuals(theme.visuals());
     }
 }
 

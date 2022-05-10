@@ -1,10 +1,13 @@
-use crate::{Page, Repainter, Runtime, View};
+use crate::{Page, Repainter, Runtime, Theme, View};
 use eframe::egui::{CentralPanel, TopBottomPanel, Ui};
 
 /// The options to create the application window with.
 pub struct WindowOptions {
     /// The window title
     pub title: String,
+
+    /// The initial theme to use, defaults to [`Theme::Dark`].
+    pub theme: Theme,
 
     /// Disable the top bar ([`Page::top`]), useful if you are not displaying anything there.
     ///
@@ -45,6 +48,7 @@ impl Default for WindowOptions {
             title: env!("CARGO_PKG_NAME").to_string(),
             disable_top: false,
             disable_bottom: false,
+            theme: Theme::Dark,
         }
     }
 }
@@ -99,6 +103,9 @@ impl Application {
                 let repainter = Repainter::new(ctx.egui_ctx.clone());
                 let runtime =
                     Runtime::new(repainter.clone()).expect("unable to start async runtime");
+
+                info!("Using {:?} theme", view.theme);
+                ctx.egui_ctx.set_visuals(view.theme.visuals());
 
                 let application = Application {
                     page: app.initial_page(),
