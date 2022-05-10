@@ -18,6 +18,7 @@ pub use repaint::Repainter;
 pub use runtime::Runtime;
 pub use view::{Theme, View};
 
+pub use eframe::egui as raw;
 pub use eframe::egui::emath as math;
 pub use eframe::egui::epaint as paint;
 pub use eframe::egui::{Context, Layout, Pos2, Rect, Vec2};
