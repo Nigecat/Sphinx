@@ -32,10 +32,8 @@ impl sphinx::Page for Page {
         } = ctx;
 
         if let Some(ref mut progress) = self.progress {
-            if progress.complete() {
-                if ui.button("Reset").clicked() {
-                    self.run = false;
-                }
+            if progress.complete() && ui.button("Reset").clicked() {
+                self.run = false;
             }
 
             if let Some(bar) = progress.bar() {

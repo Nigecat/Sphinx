@@ -78,6 +78,9 @@ pub struct UpdateContext<'u> {
 pub trait App {
     /// The inital page the application should open.
     fn initial_page(&mut self) -> Box<dyn Page>;
+
+    /// Called on shutdown.
+    fn on_exit(&mut self) {}
 }
 
 pub(crate) struct Application {
@@ -139,6 +142,10 @@ impl Application {
 }
 
 impl eframe::App for Application {
+    fn on_exit(&mut self, _gl: &eframe::glow::Context) {
+        self.app.on_exit();
+    }
+
     fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
         let name = self.page.name();
         let _span = span!(tracing::Level::DEBUG, "{}", name).entered();
