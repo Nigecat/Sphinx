@@ -4,7 +4,6 @@
 #![warn(missing_docs)]
 #![warn(clippy::float_cmp)]
 #![warn(clippy::trivially_copy_pass_by_ref)]
-#![warn(clippy::integer_division, clippy::integer_arithmatic)]
 
 #[macro_use]
 extern crate tracing;
