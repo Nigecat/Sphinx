@@ -13,6 +13,11 @@ impl sphinx::Page for ErrorExamplePage {
         "example-error"
     }
 
+    fn on_error(&mut self, _err: Box<dyn std::error::Error>) -> sphinx::Switch {
+        println!("error handled by hook");
+        sphinx::ok!();
+    }
+
     fn render(&mut self, _ctx: sphinx::UpdateContext) -> sphinx::Switch {
         Err(std::io::Error::new(
             std::io::ErrorKind::Unsupported,

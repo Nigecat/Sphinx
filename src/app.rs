@@ -72,6 +72,21 @@ pub(crate) struct Application {
 }
 
 impl Application {
+    fn process(&mut self, switch: crate::Switch) {
+        match switch {
+            Ok(page) => {
+                if let Some(page) = page {
+                    info!("Switched to page: {:?}", page.name());
+                    self.page = page;
+                }
+            }
+            Err(err) => {
+                error!("{:?}", err);
+                self.error = Some(err)
+            }
+        };
+    }
+
     pub fn run<A: App + 'static>(app: A, options: WindowOptions) -> ! {
         let mut app: Box<dyn App> = Box::new(app);
         let (app_name, native_options, view) = options.collapse();
@@ -119,26 +134,19 @@ impl eframe::App for Application {
                 };
 
                 let res = self.page.$method(ctx);
-                match res {
-                    Ok(page) => {
-                        if let Some(page) = page {
-                            info!("Switched to page: {:?}", page.name());
-                            self.page = page;
-                        }
-                    }
-                    Err(err) => {
-                        error!("{:?}", err);
-                        self.error = Some(err)
-                    }
-                };
+                self.process(res);
             }};
         }
 
         if let Some(ref err) = self.error {
             let err = err.to_string();
             eframe::egui::Window::new("Error").show(ctx, |ui| {
-                ui.label(&format!("{}", err));
+                ui.label(err.to_string());
                 if ui.button("Ok").clicked() {
+                    if let Some(err) = self.error.take() {
+                        let res = self.page.on_error(err);
+                        self.process(res);
+                    }
                     self.error = None;
                 }
             });
