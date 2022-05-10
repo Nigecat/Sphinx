@@ -4,12 +4,16 @@ use eframe::egui::ProgressBar;
 use std::sync::mpsc;
 
 pub struct ProgressUi {
+    repainter: crate::Repainter,
     progress: f32,
     update: mpsc::Receiver<f32>,
 }
 
 impl ProgressUi {
     pub fn bar(&mut self) -> ProgressBar {
+        // We must repaint every frame so the mpsc channel event actually fires
+        self.repainter.request_repaint();
+
         if let Ok(progress) = self.update.try_recv() {
             self.progress = progress;
         }
@@ -31,10 +35,11 @@ pub struct ProgressView<I: Iterator> {
     update: mpsc::Sender<f32>,
 }
 
-pub fn create() -> (ProgressUi, ProgressAdapter) {
+pub fn create(repainter: crate::Repainter) -> (ProgressUi, ProgressAdapter) {
     let (sender, receiver) = mpsc::channel::<f32>();
     (
         ProgressUi {
+            repainter,
             progress: 0.0,
             update: receiver,
         },

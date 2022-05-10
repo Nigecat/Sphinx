@@ -33,6 +33,7 @@ impl WindowOptions {
         let view = View {
             top_enabled: !self.disable_top,
             bottom_enabled: !self.disable_bottom,
+            ..Default::default()
         };
         (self.title, Default::default(), view)
     }

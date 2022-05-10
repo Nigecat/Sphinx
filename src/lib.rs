@@ -16,7 +16,7 @@ pub use app::{App, UpdateContext, WindowOptions};
 pub use page::{Page, Switch};
 pub use repaint::Repainter;
 pub use runtime::Runtime;
-pub use view::View;
+pub use view::{Theme, View};
 
 pub use eframe::egui::emath as math;
 pub use eframe::egui::epaint as paint;

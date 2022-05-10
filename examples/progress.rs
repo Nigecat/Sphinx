@@ -37,16 +37,14 @@ impl sphinx::Page for Page {
 
         if !self.run {
             self.run = true;
-            let repainter = repainter.clone();
 
-            let (progress, adapter) = sphinx::progress::create();
+            let (progress, adapter) = sphinx::progress::create(repainter.clone());
             self.progress = Some(progress);
             runtime.execute(
                 async move {
                     for _ in (0..10).into_iter().show_progress(adapter) {
                         ::std::thread::sleep(::std::time::Duration::from_secs(1));
                         println!("tick");
-                        repainter.request_repaint();
                     }
                 },
                 |_| println!("done!"),
