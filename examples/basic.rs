@@ -4,7 +4,7 @@ struct App;
 
 impl sphinx::App for App {
     fn initial_page(&mut self) -> Box<dyn sphinx::Page> {
-        Box::new(PageA::default())
+        Box::new(PageA)
     }
 }
 
@@ -12,7 +12,7 @@ struct PageA;
 
 impl sphinx::Page for PageA {
     fn name(&self) -> &str {
-        "demo-page-a"
+        "example-page-a"
     }
 
     fn render(&mut self, ctx: UpdateContext) -> sphinx::Switch {
@@ -23,13 +23,7 @@ impl sphinx::Page for PageA {
             sphinx::switch_to_page!(PageB);
         }
 
-        Ok(None)
-    }
-}
-
-impl Default for PageA {
-    fn default() -> Self {
-        PageA
+        sphinx::ok!();
     }
 }
 
@@ -37,7 +31,7 @@ struct PageB;
 
 impl sphinx::Page for PageB {
     fn name(&self) -> &str {
-        "demo-page-b"
+        "example-page-b"
     }
 
     fn render(&mut self, ctx: UpdateContext) -> sphinx::Switch {
@@ -48,7 +42,7 @@ impl sphinx::Page for PageB {
             sphinx::switch_to_page!(PageA);
         }
 
-        Ok(None)
+        sphinx::ok!();
     }
 }
 

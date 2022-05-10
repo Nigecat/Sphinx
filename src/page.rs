@@ -1,6 +1,13 @@
 use crate::UpdateContext;
 
 #[macro_export]
+macro_rules! ok {
+    () => {
+        return Ok(None);
+    };
+}
+
+#[macro_export]
 macro_rules! switch_to_page {
     ($page: ident) => {
         return ::std::result::Result::Ok(::std::option::Option::Some(::std::boxed::Box::new(

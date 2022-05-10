@@ -7,6 +7,7 @@ extern crate tracing;
 
 mod app;
 mod page;
+pub mod progress;
 mod repaint;
 mod runtime;
 mod view;
@@ -19,7 +20,7 @@ pub use view::View;
 
 pub use eframe::egui::emath as math;
 pub use eframe::egui::epaint as paint;
-pub use eframe::egui::Context;
+pub use eframe::egui::{Context, Layout, Rect};
 pub use eframe::glow;
 pub use eframe::Frame;
 
