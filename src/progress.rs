@@ -97,7 +97,7 @@ impl<I: Iterator> Iterator for ProgressView<I> {
 impl<I: Iterator> ShowProgress<I> for I {
     fn show_progress(self, adapter: ProgressAdapter) -> ProgressView<I> {
         if self.size_hint().1.is_none() {
-            warn!("Unable to detect upper bound for progress iterator, progress bar will not be visible");
+            warn!("Unable to detect upper bound for progress iterator, progress bar will not be work (spinner will work)");
         }
 
         ProgressView {
