@@ -1,6 +1,6 @@
 //! An iterator adapter to display a progress bar.
 
-use eframe::egui::ProgressBar;
+use eframe::egui::{ProgressBar, Spinner};
 use std::sync::mpsc;
 
 pub struct ProgressUi {
@@ -10,15 +10,41 @@ pub struct ProgressUi {
 }
 
 impl ProgressUi {
-    pub fn bar(&mut self) -> ProgressBar {
+    /// Check the update channel for any updates and update the internal progress counter.
+    fn update_progress(&mut self) {
         // We must repaint every frame so the mpsc channel event actually fires
         self.repainter.request_repaint();
 
         if let Ok(progress) = self.update.try_recv() {
             self.progress = progress;
         }
+    }
 
+    /// Get the progress indicator as a progress bar, this will sit on 100% once complete.
+    pub fn cbar(&mut self) -> ProgressBar {
+        // No point updating after iterator is complete
+        if !self.complete() {
+            self.update_progress();
+        }
         ProgressBar::new(self.progress)
+    }
+
+    /// Get the progress indicator as a progress bar, this will return `None` once the iterator is complete.
+    pub fn bar(&mut self) -> Option<ProgressBar> {
+        self.update_progress();
+        match self.complete() {
+            true => None,
+            false => Some(ProgressBar::new(self.progress)),
+        }
+    }
+
+    /// Get the progress indicator as a spinner, this will return `None` once the iterator is complete.
+    pub fn spinner(&mut self) -> Option<Spinner> {
+        self.update_progress();
+        match self.complete() {
+            true => None,
+            false => Some(Spinner::new()),
+        }
     }
 
     /// Check if the progress bar is at 100%

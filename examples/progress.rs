@@ -32,7 +32,15 @@ impl sphinx::Page for Page {
         } = ctx;
 
         if let Some(ref mut progress) = self.progress {
-            progress.bar().ui(ui);
+            if let Some(bar) = progress.bar() {
+                bar.ui(ui);
+            }
+
+            ui.separator();
+
+            if let Some(spinner) = progress.spinner() {
+                spinner.ui(ui);
+            }
         }
 
         if !self.run {
