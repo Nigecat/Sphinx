@@ -72,6 +72,8 @@ pub struct UpdateContext<'u> {
     pub ui: &'u mut Ui,
     /// The application view.
     pub view: &'u mut View,
+    /// The application.
+    pub app: &'u mut Box<dyn App>,
 }
 
 /// An application.
@@ -159,6 +161,7 @@ impl eframe::App for Application {
                     runtime: &self.runtime,
                     ui: $ui,
                     view: &mut self.view,
+                    app: &mut self.app,
                 };
 
                 let res = self.page.$method(ctx);
