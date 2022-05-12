@@ -33,5 +33,14 @@ pub use thiserror::Error;
 
 /// Start a window with the given application and options.
 pub fn run<A: App + 'static>(app: A, options: WindowOptions) -> ! {
-    app::Application::run(app, options)
+    app::Application::run(app, options, ())
+}
+
+/// Start a window with the given application and options, an additional state can be passed which will be exposed as [`UpdateContext::state`].
+pub fn run_with_state<A, S>(app: A, options: WindowOptions, state: S) -> !
+where
+    A: App + 'static,
+    S: std::any::Any,
+{
+    app::Application::run(app, options, state)
 }

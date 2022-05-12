@@ -1,5 +1,6 @@
 use crate::{Page, Repainter, Runtime, Theme, View};
 use eframe::egui::{CentralPanel, TopBottomPanel, Ui};
+use std::any::Any;
 
 /// The options to create the application window with.
 pub struct WindowOptions {
@@ -74,6 +75,8 @@ pub struct UpdateContext<'u> {
     pub view: &'u mut View,
     /// The application.
     pub app: &'u mut Box<dyn App>,
+    /// The application state, this defaults to `()` if the window was not created with a state.
+    pub state: &'u mut Box<dyn Any>,
 }
 
 /// An application.
@@ -92,6 +95,7 @@ pub(crate) struct Application {
     runtime: Runtime,
     view: View,
     error: Option<Box<dyn ::std::error::Error>>,
+    state: Box<dyn Any>,
 }
 
 impl Application {
@@ -110,7 +114,11 @@ impl Application {
         };
     }
 
-    pub fn run<A: App + 'static>(app: A, options: WindowOptions) -> ! {
+    pub fn run<A, S>(app: A, options: WindowOptions, state: S) -> !
+    where
+        A: App + 'static,
+        S: Any,
+    {
         let mut app: Box<dyn App> = Box::new(app);
         let (app_name, native_options, view) = options.collapse();
 
@@ -132,6 +140,7 @@ impl Application {
                     runtime,
                     error: None,
                     view,
+                    state: Box::new(state),
                 };
 
                 let name = application.page.name();
@@ -162,6 +171,7 @@ impl eframe::App for Application {
                     ui: $ui,
                     view: &mut self.view,
                     app: &mut self.app,
+                    state: &mut self.state,
                 };
 
                 let res = self.page.$method(ctx);
