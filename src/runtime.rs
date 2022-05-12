@@ -41,28 +41,13 @@ impl Runtime {
         F: Future + Send + 'static,
         F::Output: Send + 'static,
     {
-        let (sender, mut receiver_i) = oneshot::channel::<F::Output>();
-        let (sender_i, receiver) = oneshot::channel::<F::Output>();
+        let (sender, receiver) = oneshot::channel::<F::Output>();
 
-        self.execute(future, |f| {
-            let _ = sender.send(f);
-        });
-
-        // Wake up renderer on complete
         let repainter = self.repainter.clone();
-        self.execute(
-            async move {
-                loop {
-                    if let Ok(Some(val)) = receiver_i.try_recv() {
-                        return val;
-                    }
-                }
-            },
-            move |val| {
-                let _ = sender_i.send(val);
-                repainter.request_repaint();
-            },
-        );
+        self.execute(future, move |f| {
+            let _ = sender.send(f);
+            repainter.request_repaint();
+        });
 
         receiver
     }
