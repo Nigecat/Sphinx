@@ -27,6 +27,7 @@ impl Default for Theme {
 }
 
 /// An interface to update the view of the app state at runtime.
+#[derive(Debug)]
 pub struct View {
     /// Whether the top bar is enabled
     pub(crate) top_enabled: bool,
