@@ -1,10 +1,9 @@
-use serde::{Serialize, Deserialize};
 #[allow(unused_imports)] // used for doc comments
 use crate::Page;
 
 /// A visual theme.
 #[non_exhaustive]
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Theme {
     /// The light theme.
     Light,
