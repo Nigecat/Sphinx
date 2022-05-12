@@ -4,6 +4,8 @@ version = "0.0.3"
 edition = "2021"
 
 [features]
+default = ["runtime"]
+runtime = ["dep:futures", "dep:tokio"]
 animation = []
 
 [dependencies]
@@ -12,8 +14,8 @@ eframe = "0.18.0"
 tracing = "0.1"
 thiserror = "1.0"
 
-futures = "0.3"
-tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync"] }
+futures = { version = "0.3", optional = true }
+tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync"], optional = true }
 
 [dev-dependencies]
 tracing-subscriber = "0.3.11"

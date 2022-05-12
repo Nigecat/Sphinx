@@ -1,4 +1,6 @@
-use crate::{Page, Repainter, Runtime, Theme, View};
+#[cfg(feature = "runtime")]
+use crate::Runtime;
+use crate::{Page, Repainter, Theme, View};
 use eframe::egui::{CentralPanel, TopBottomPanel, Ui};
 use std::any::Any;
 
@@ -62,6 +64,7 @@ impl Default for WindowOptions {
 /// The data given when the renderer must provide an update.
 pub struct UpdateContext<'u> {
     /// The async runtime.
+    #[cfg(feature = "runtime")]
     pub runtime: &'u Runtime,
     /// An object capable of requesting a repaint.
     pub repainter: &'u Repainter,
@@ -94,6 +97,7 @@ pub(crate) struct Application {
     app: Box<dyn App>,
     page: Box<dyn Page>,
     repainter: Repainter,
+    #[cfg(feature = "runtime")]
     runtime: Runtime,
     view: View,
     error: Option<Box<dyn ::std::error::Error>>,
@@ -129,6 +133,7 @@ impl Application {
             native_options,
             Box::new(|ctx| {
                 let repainter = Repainter::new(ctx.egui_ctx.clone());
+                #[cfg(feature = "runtime")]
                 let runtime =
                     Runtime::new(repainter.clone()).expect("unable to start async runtime");
 
@@ -139,6 +144,7 @@ impl Application {
                     page: app.initial_page(),
                     app,
                     repainter,
+                    #[cfg(feature = "runtime")]
                     runtime,
                     error: None,
                     view,
@@ -169,6 +175,7 @@ impl eframe::App for Application {
                     ctx,
                     frame,
                     repainter: &self.repainter,
+                    #[cfg(feature = "runtime")]
                     runtime: &self.runtime,
                     ui: $ui,
                     view: &mut self.view,

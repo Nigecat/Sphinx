@@ -12,6 +12,7 @@ mod app;
 mod page;
 pub mod progress;
 mod repaint;
+#[cfg(feature = "runtime")]
 mod runtime;
 mod view;
 pub mod widgets;
@@ -19,6 +20,7 @@ pub mod widgets;
 pub use app::{App, UpdateContext, WindowOptions};
 pub use page::{Page, Switch};
 pub use repaint::Repainter;
+#[cfg(feature = "runtime")]
 pub use runtime::{oneshot, Runtime};
 pub use view::{Theme, View};
 
