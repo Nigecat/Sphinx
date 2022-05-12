@@ -68,11 +68,11 @@ pub struct ProgressView<I: Iterator> {
 
 /// Create a matching [`ProgressUi`] and [`ProgressAdapter`].
 #[must_use]
-pub fn create(repainter: crate::Repainter) -> (ProgressUi, ProgressAdapter) {
+pub fn create(repainter: &crate::Repainter) -> (ProgressUi, ProgressAdapter) {
     let (sender, receiver) = mpsc::channel::<f32>();
     (
         ProgressUi {
-            repainter,
+            repainter: repainter.clone(),
             progress: 0.0,
             update: receiver,
         },

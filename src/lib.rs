@@ -19,7 +19,7 @@ pub mod widgets;
 pub use app::{App, UpdateContext, WindowOptions};
 pub use page::{Page, Switch};
 pub use repaint::Repainter;
-pub use runtime::Runtime;
+pub use runtime::{oneshot, Runtime};
 pub use view::{Theme, View};
 
 #[doc(hidden)]

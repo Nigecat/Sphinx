@@ -1,6 +1,5 @@
-use eframe::egui::Widget;
 use sphinx::progress::ShowProgress as _;
-use sphinx::UpdateContext;
+use sphinx::{UpdateContext, Widget};
 
 struct App;
 
@@ -50,7 +49,7 @@ impl sphinx::Page for Page {
         if !self.run {
             self.run = true;
 
-            let (progress, adapter) = sphinx::progress::create(repainter.clone());
+            let (progress, adapter) = sphinx::progress::create(repainter);
             self.progress = Some(progress);
             runtime.execute(
                 async move {

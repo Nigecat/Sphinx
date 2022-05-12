@@ -76,7 +76,7 @@ pub struct UpdateContext<'u> {
     /// The application.
     pub app: &'u mut Box<dyn App>,
     /// The application state.
-    /// 
+    ///
     /// This defaults to `()` if [`crate::run`] was used to start the app, otherwise it will be whatever `state` value was passed to [`crate::run_with_state`].
     pub state: &'u mut Box<dyn Any>,
 }
