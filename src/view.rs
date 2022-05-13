@@ -4,6 +4,7 @@ use crate::Page;
 /// A visual theme.
 #[non_exhaustive]
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[cfg_attr(feature = "serde", derive(serde::Serialize, serde::Deserialize))]
 pub enum Theme {
     /// The light theme.
     Light,

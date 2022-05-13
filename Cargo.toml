@@ -4,7 +4,8 @@ version = "0.0.3"
 edition = "2021"
 
 [features]
-default = ["runtime"]
+default = ["serde", "runtime"]
+serde = ["dep:serde"]
 runtime = ["dep:futures", "dep:tokio"]
 animation = []
 
@@ -14,6 +15,8 @@ use-state = { path = "state" }
 
 tracing = "0.1"
 thiserror = "1.0"
+
+serde = { version = "1.0", features = ["derive"], optional = true }
 
 futures = { version = "0.3", optional = true }
 tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync"], optional = true }
