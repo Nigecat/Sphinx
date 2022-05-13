@@ -1,6 +1,6 @@
-use crate::UpdateContext;
 #[allow(unused_imports)] // used for doc comments
-use crate::{View, WindowOptions};
+use crate::WindowOptions;
+use crate::{UpdateContext, View};
 
 /// Call this to indicate a page render executed successfully.
 #[macro_export]
@@ -30,6 +30,12 @@ pub type Switch = Result<Option<Box<dyn Page>>, Box<dyn ::std::error::Error>>;
 pub trait Page {
     /// The name of the page, this is used for error reporting and logging
     fn name(&self) -> &str;
+
+    /// Called when the page is switched to, use this to update the view if necessary.
+    fn enter(&mut self, _view: &mut View) {}
+
+    /// Called when the page is switched off of, use this to undo [`Page::enter`] if necessary.
+    fn exit(&mut self, _view: &mut View) {}
 
     /// What to do if a render method on this page returns an error.
     /// This will be called **after** the user has clicked `Ok` on the error prompt.

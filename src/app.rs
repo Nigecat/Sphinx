@@ -154,8 +154,10 @@ impl Application {
         match switch {
             Ok(page) => {
                 if let Some(page) = page {
+                    self.page.exit(&mut self.view);
                     info!("Switched to page: {:?}", page.name());
                     self.page = page;
+                    self.page.enter(&mut self.view);
                 }
             }
             Err(err) => {
@@ -185,7 +187,7 @@ impl Application {
                 info!("Using {:?} theme", view.theme);
                 ctx.egui_ctx.set_visuals(view.theme.visuals());
 
-                let application = Application {
+                let mut application = Application {
                     page: app.initial_page(),
                     app,
                     repainter,
@@ -195,6 +197,8 @@ impl Application {
                     view,
                     state: Box::new(state),
                 };
+
+                application.page.enter(&mut application.view);
 
                 let name = application.page.name();
                 info!("Starting with page: {:?}", name);
