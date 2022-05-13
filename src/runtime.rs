@@ -35,7 +35,7 @@ impl Runtime {
         });
     }
 
-    /// TODO
+    /// Execute the given future in the async runtime, returns a oneshot channel which resolves to the completed future output.
     pub fn execute_oneshot<F>(&self, future: F) -> oneshot::Receiver<F::Output>
     where
         F: Future + Send + 'static,

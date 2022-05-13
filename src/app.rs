@@ -84,7 +84,7 @@ impl Default for WindowOptions {
 /// struct State {
 ///     counter: usize,
 /// }
-/// 
+///
 /// // ..
 ///
 /// /* in sphinx::Page implementation */
