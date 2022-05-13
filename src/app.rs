@@ -131,6 +131,9 @@ pub trait App {
     /// The inital page the application should open.
     fn initial_page(&mut self) -> Box<dyn Page>;
 
+    /// Called to save state, this is called before [`App::on_exit`].
+    fn save(&mut self, _state: &Box<dyn Any>) {}
+
     /// Called on shutdown.
     fn on_exit(&mut self) {}
 }
@@ -204,6 +207,7 @@ impl Application {
 
 impl eframe::App for Application {
     fn on_exit(&mut self, _gl: &eframe::glow::Context) {
+        self.app.save(&self.state);
         self.app.on_exit();
     }
 
