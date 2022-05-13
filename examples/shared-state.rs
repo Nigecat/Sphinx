@@ -17,12 +17,12 @@ struct PageA;
 
 impl sphinx::Page for PageA {
     fn name(&self) -> &str {
-        "example-global-state-pagea"
+        "example-shared-state-pagea"
     }
 
-    fn render(&mut self, ctx: UpdateContext) -> sphinx::Switch {
-        let UpdateContext { ui, state, .. } = ctx;
-        let state = state.downcast_mut::<State>().unwrap();
+    #[sphinx::use_state]
+    fn render(&mut self, ctx: UpdateContext, state: State) -> sphinx::Switch {
+        let UpdateContext { ui, .. } = ctx;
 
         ui.label("----- Page A -----");
         ui.label(format!("Counter: {}", state.counter));
@@ -40,12 +40,12 @@ struct PageB;
 
 impl sphinx::Page for PageB {
     fn name(&self) -> &str {
-        "example-global-state-pageb"
+        "example-shared-state-pageb"
     }
 
-    fn render(&mut self, ctx: UpdateContext) -> sphinx::Switch {
-        let UpdateContext { ui, state, .. } = ctx;
-        let state = state.downcast_mut::<State>().unwrap();
+    #[sphinx::use_state]
+    fn render(&mut self, ctx: UpdateContext, state: State) -> sphinx::Switch {
+        let UpdateContext { ui, .. } = ctx;
 
         ui.label("----- Page B -----");
         ui.label(format!("Counter: {}", state.counter));

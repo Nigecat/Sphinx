@@ -62,6 +62,46 @@ impl Default for WindowOptions {
 }
 
 /// The data given when the renderer must provide an update.
+///
+/// This should be destructured to get the specific data you need for a render, ensure to use the `..` syntax as this object will likely expand in future releases.  
+/// For example:
+/// ```rust
+/// use sphinx::UpdateContext;
+///
+/// /* in sphinx::Page implementation*/
+/// fn render(&mut self, ctx: UpdateContext) -> sphinx::Switch {
+///     let UpdateContext { ui, .. } = ctx;
+///     ui.label("Hello, World!");
+///     sphinx::ok!();
+/// }
+/// ```
+///
+/// Additionally, state can be fetched with the [`crate::use_state`] macro.
+/// ```rust
+/// use sphinx::{UpdateContext, use_state};
+///
+/// #[derive(Default)]
+/// struct State {
+///     counter: usize,
+/// }
+/// 
+/// // ..
+///
+/// /* in sphinx::Page implementation */
+/// #[use_state]
+/// fn render(&mut self, ctx: UpdateContext, state: State) -> sphinx::Switch {
+///     assert_eq!(state.counter, 0);
+///     sphinx::ok!();
+/// }
+///
+/// // ..
+///
+/// fn main() {
+///     sphinx::run_with_state(/* app */, sphinx::WindowOptions::default(), State::default());
+/// }
+/// ```
+/// Note that the type given to the `state` parameter of the `render` method **must** be the same type as the instance given to the [`crate::run_with_state`] method.
+/// Doing otherwise will lead to a runtime panic when the page attempts to render.
 pub struct UpdateContext<'u> {
     /// The async runtime.
     #[cfg(feature = "runtime")]
@@ -79,8 +119,10 @@ pub struct UpdateContext<'u> {
     /// The application.
     pub app: &'u mut Box<dyn App>,
     /// The application state.
+    /// This should not be used directly. Use [`crate::use_state`] instead.
     ///
     /// This defaults to `()` if [`crate::run`] was used to start the app, otherwise it will be whatever `state` value was passed to [`crate::run_with_state`].
+    #[doc(hidden)]
     pub state: &'u mut Box<dyn Any>,
 }
 

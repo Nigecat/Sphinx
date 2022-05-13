@@ -10,6 +10,7 @@ animation = []
 
 [dependencies]
 eframe = "0.18.0"
+use-state = { path = "state" }
 
 tracing = "0.1"
 thiserror = "1.0"
