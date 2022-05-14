@@ -16,3 +16,9 @@ impl Repainter {
         self.ctx.request_repaint();
     }
 }
+
+impl From<Context> for Repainter {
+    fn from(ctx: Context) -> Self {
+        Repainter::new(ctx)
+    }
+}
