@@ -1,7 +1,11 @@
 use crate::{Pos2, Response};
 
+pub trait Sealed {}
+
+impl Sealed for Response {}
+
 /// Extends a [`crate::Response`].
-pub trait ResponseExt {
+pub trait ResponseExt: Sealed {
     /// A mixture of [`Response::clicked`] and [`Response::interact_pointer_pos`].  
     ///
     /// Returns `None` if the element was not clicked.   
