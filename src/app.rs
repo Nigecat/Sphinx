@@ -295,7 +295,9 @@ impl eframe::App for Application {
         }
 
         if self.view.bottom_enabled {
-            TopBottomPanel::bottom("bottom").show(ctx, |ui| bind!(ui, bottom));
+            TopBottomPanel::bottom("bottom").show(ctx, |ui| {
+                ui.vertical_centered_justified(|ui| bind!(ui, bottom))
+            });
         }
 
         CentralPanel::default().show(ctx, |ui| bind!(ui, render));
