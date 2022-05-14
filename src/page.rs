@@ -44,6 +44,11 @@ pub trait Page {
         Ok(None)
     }
 
+    /// Run any local initialization with the given context.
+    ///
+    /// This is called after [`Page::enter`] and should not render any elements to the ui.
+    fn init(&mut self, _ctx: UpdateContext) {}
+
     /// The top bar.
     ///
     /// This can be disabled at runtime with [`View::disable_top`] or at startup with [`WindowOptions::disable_top`].

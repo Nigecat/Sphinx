@@ -139,6 +139,8 @@ pub trait App {
 }
 
 pub(crate) struct Application {
+    /// Whether the init method has been run for the current page
+    init: bool,
     app: Box<dyn App>,
     page: Box<dyn Page>,
     repainter: Repainter,
@@ -158,6 +160,8 @@ impl Application {
                     info!("Switched to page: {:?}", page.name());
                     self.page = page;
                     self.page.enter(&mut self.view);
+                    self.init = false;
+                    self.repainter.request_repaint();
                 }
             }
             Err(err) => {
@@ -188,6 +192,7 @@ impl Application {
                 ctx.egui_ctx.set_visuals(view.theme.visuals());
 
                 let mut application = Application {
+                    init: false,
                     page: app.initial_page(),
                     app,
                     repainter,
@@ -220,8 +225,8 @@ impl eframe::App for Application {
         let _span = span!(tracing::Level::DEBUG, "{}", name).entered();
 
         macro_rules! bind {
-            ($ui: ident, $method: ident) => {{
-                let ctx = UpdateContext {
+            ($ui: ident) => {
+                UpdateContext {
                     ctx,
                     frame,
                     repainter: &self.repainter,
@@ -231,8 +236,11 @@ impl eframe::App for Application {
                     view: &mut self.view,
                     app: &mut self.app,
                     state: &mut self.state,
-                };
+                }
+            };
 
+            ($ui: ident, $method: ident) => {{
+                let ctx = bind!($ui);
                 let res = self.page.$method(ctx);
                 self.process(res);
             }};
@@ -261,6 +269,23 @@ impl eframe::App for Application {
             }
 
             CentralPanel::default().show(ctx, |_| {});
+
+            return;
+        }
+
+        if !self.init {
+            self.init = true;
+
+            crate::Area::new("init")
+                .fixed_pos(crate::Pos2::new(0.0, 0.0))
+                .enabled(false)
+                .movable(false)
+                .interactable(false)
+                .order(crate::raw::Order::Background)
+                .show(ctx, |ui| {
+                    let ctx = bind!(ui);
+                    self.page.init(ctx);
+                });
 
             return;
         }
