@@ -1,4 +1,7 @@
 //! A thin wrapper around egui to provide basic page switching and other utilities along with an async runtime.
+//!
+//! # Usage
+//! Create a struct which implements [`App`] then call [`run`].
 
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
