@@ -157,7 +157,7 @@ impl Application {
             Ok(page) => {
                 if let Some(page) = page {
                     self.page.exit(&mut self.view);
-                    debug!("Switched to page: {:?}", page.name());
+                    info!("Switched to page: {:?}", page.name());
                     self.page = page;
                     self.page.enter(&mut self.view);
                     self.init = false;
@@ -188,7 +188,7 @@ impl Application {
                 let runtime =
                     Runtime::new(repainter.clone()).expect("unable to start async runtime");
 
-                debug!("Using {:?} theme", view.theme);
+                info!("Using {:?} theme", view.theme);
                 ctx.egui_ctx.set_visuals(view.theme.visuals());
 
                 let mut application = Application {
@@ -206,7 +206,7 @@ impl Application {
                 application.page.enter(&mut application.view);
 
                 let name = application.page.name();
-                debug!("Starting with page: {:?}", name);
+                info!("Starting with page: {:?}", name);
 
                 Box::new(application)
             }),
