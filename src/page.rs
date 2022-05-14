@@ -13,7 +13,7 @@ macro_rules! ok {
 /// Switch to the given page, the given object must implement the [`Page`] trait.
 #[macro_export]
 macro_rules! switch_to_page {
-    ($page: ident) => {
+    ($page: expr) => {
         return ::std::result::Result::Ok(::std::option::Option::Some(::std::boxed::Box::new(
             $page,
         )));
