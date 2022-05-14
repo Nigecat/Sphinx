@@ -6,7 +6,10 @@ impl Sealed for Ui {}
 
 /// Extends a [`crate::Ui`].
 pub trait UiExt: Sealed {
-    /// Add an element using both [`eframe::egui::Ui::add_sized`] and [`eframe::egui::Ui::add_enabled`].
+    /// Add an element taking up [`Ui::available_size`].
+    fn add_max(&mut self, widget: impl Widget) -> Response;
+
+    /// Add an element using both [`Ui::add_sized`] and [`Ui::add_enabled`].
     fn add_enabled_with_size(
         &mut self,
         enabled: bool,
@@ -16,6 +19,10 @@ pub trait UiExt: Sealed {
 }
 
 impl UiExt for Ui {
+    fn add_max(&mut self, widget: impl Widget) -> Response {
+        self.add_sized(self.available_size(), widget)
+    }
+
     fn add_enabled_with_size(
         &mut self,
         enabled: bool,
