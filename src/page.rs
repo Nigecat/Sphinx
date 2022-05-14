@@ -14,9 +14,9 @@ macro_rules! ok {
 #[macro_export]
 macro_rules! switch_to_page {
     ($page: expr) => {
-        return ::std::result::Result::Ok(::std::option::Option::Some(::std::boxed::Box::new(
-            $page,
-        )));
+        let __switch_to_page_instance: ::std::boxed::Box<dyn ::sphinx::Page> =
+            ::std::boxed::Box::new($page);
+        return ::std::result::Result::Ok(::std::option::Option::Some(__switch_to_page_instance));
     };
 }
 
