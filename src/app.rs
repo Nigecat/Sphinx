@@ -102,6 +102,7 @@ impl Default for WindowOptions {
 /// ```
 /// Note that the type given to the `state` parameter of the `render` method **must** be the same type as the instance given to the [`crate::run_with_state`] method.
 /// Doing otherwise will lead to a runtime panic when the page attempts to render.
+#[non_exhaustive]
 pub struct UpdateContext<'u> {
     /// The async runtime.
     #[cfg(feature = "runtime")]
