@@ -1,5 +1,5 @@
 [package]
-name = "use-state"
+name = "sphinx-use-state"
 version = "0.0.1"
 edition = "2021"
 

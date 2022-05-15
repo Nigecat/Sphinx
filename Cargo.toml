@@ -11,7 +11,7 @@ animation = []
 
 [dependencies]
 eframe = "0.18.0"
-use-state = { path = "state" }
+sphinx-use-state = { path = "state", version = "0.0.1" }
 
 tracing = "0.1"
 thiserror = "1.0"

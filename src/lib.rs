@@ -38,8 +38,8 @@ pub use eframe::egui::{Context, Event, Key, Layout, Response, Sense};
 pub use eframe::egui::{Pos2, Rect, Vec2};
 pub use eframe::{glow, Frame, IconData, NativeOptions};
 
+pub use sphinx_use_state::use_state;
 pub use thiserror::Error;
-pub use use_state::use_state;
 
 /// Start a window with the given application and options.
 pub fn run<A: App + 'static>(app: A, options: WindowOptions) -> ! {
