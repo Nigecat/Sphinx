@@ -2,6 +2,9 @@
 name = "sphinx-use-state"
 version = "0.0.1"
 edition = "2021"
+description = "Helper proc macro for Sphinx"
+license = "MIT OR Apache-2.0"
+readme = "../README.md"
 
 [lib]
 proc-macro = true

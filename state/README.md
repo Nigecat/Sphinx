@@ -1,1 +1,0 @@
-Helper proc macro for [Sphinx](https://docs.rs/sphinx).
