@@ -1,3 +1,5 @@
+//! Helper proc macro for [Sphinx](https://docs.rs/sphinx).
+
 use proc_macro::TokenStream;
 use quote::{quote, ToTokens};
 use syn::{parse_macro_input, FnArg, ItemFn};
