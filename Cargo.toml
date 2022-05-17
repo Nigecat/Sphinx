@@ -1,6 +1,6 @@
 [package]
 name = "sphinx"
-version = "0.0.3"
+version = "0.0.4"
 edition = "2021"
 license = "MIT OR Apache-2.0"
 readme = "README.md"
@@ -8,7 +8,7 @@ description = "A thin wrapper around egui to provide basic page switching and ot
 repository = "https://github.com/Nigecat/Sphinx"
 
 [features]
-default = ["serde", "runtime"]
+default = []
 serde = ["dep:serde"]
 runtime = ["dep:futures", "dep:tokio"]
 animation = []
@@ -27,3 +27,11 @@ tokio = { version = "1", features = ["rt", "rt-multi-thread", "sync"], optional 
 
 [dev-dependencies]
 tracing-subscriber = "0.3.11"
+
+[[example]]
+name = "progress"
+required-features = ["runtime"]
+
+[[example]]
+name = "state-machine"
+required-features = ["runtime"]
