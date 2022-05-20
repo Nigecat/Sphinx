@@ -18,6 +18,7 @@ pub mod progress;
 mod repaint;
 #[cfg(feature = "runtime")]
 mod runtime;
+pub mod utils;
 mod view;
 pub mod widgets;
 
