@@ -8,10 +8,11 @@ description = "A thin wrapper around egui to provide basic page switching and ot
 repository = "https://github.com/Nigecat/Sphinx"
 
 [features]
-default = []
+default = ["datepicker"]
 serde = ["dep:serde"]
+datepicker = ["dep:chrono"]
 runtime = ["dep:futures", "dep:tokio"]
-animation = []
+# animation = []
 
 [dependencies]
 eframe = "0.18.0"
@@ -20,6 +21,7 @@ sphinx-use-state = { path = "state", version = "0.0.1" }
 tracing = "0.1"
 thiserror = "1.0"
 
+chrono = { version = "0.4.19", optional = true }
 serde = { version = "1.0", features = ["derive"], optional = true }
 
 futures = { version = "0.3", optional = true }
