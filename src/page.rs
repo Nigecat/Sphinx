@@ -10,6 +10,13 @@ macro_rules! ok {
     };
 }
 
+// TODO implement this
+// FIXME needs implementation
+#[macro_export]
+macro_rules! resolve {
+    () => {};
+}
+
 /// Switch to the given page, the given object must implement the [`Page`] trait.
 #[macro_export]
 macro_rules! switch_to_page {

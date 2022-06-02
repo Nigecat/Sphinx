@@ -33,7 +33,7 @@ pub use eframe::egui as raw;
 pub use eframe::egui::emath as math;
 pub use eframe::egui::epaint as paint;
 pub use eframe::egui::{Area, CentralPanel, SidePanel, TopBottomPanel, Window};
-pub use eframe::egui::{Color32, Ui, Widget};
+pub use eframe::egui::{Color32, TextBuffer, Ui, Widget};
 pub use eframe::egui::{Context, Event, Key, Layout, Response, Sense};
 pub use eframe::egui::{Pos2, Rect, Vec2};
 pub use eframe::{glow, Frame, IconData, NativeOptions};
