@@ -10,11 +10,18 @@ macro_rules! ok {
     };
 }
 
-// TODO implement this
-// FIXME needs implementation
+/// Given an expression which results in a [`crate::Switch`], if the final value is anything other than `Ok(None)`, return it.
 #[macro_export]
 macro_rules! resolve {
-    () => {};
+    ($( $ex: expr ),* $(,)?) => {
+        $(
+            let __resolve_expr_result: ::sphinx::Switch = $ex;
+            match __resolve_expr_result {
+                Ok(None) => (),
+                switch => return switch,
+            }
+        )*
+    };
 }
 
 /// Switch to the given page, the given object must implement the [`Page`] trait.
