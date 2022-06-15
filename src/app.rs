@@ -141,7 +141,11 @@ pub trait App {
 
     /// Called directly before a render
     ///     (note that this is called **before** handling any errors the previous render call may have generated).
-    fn on_render(&mut self, _ctx: &eframe::egui::Context) -> crate::Switch {
+    fn on_render(
+        &mut self,
+        _ctx: &eframe::egui::Context,
+        _state: &mut Box<dyn Any>,
+    ) -> crate::Switch {
         Ok(None)
     }
 
@@ -272,7 +276,7 @@ impl eframe::App for Application {
             }};
         }
 
-        let res = self.app.on_render(ctx);
+        let res = self.app.on_render(ctx, &mut self.state);
         self.process(res);
 
         if let Some(ref err) = self.error {

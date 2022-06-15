@@ -20,6 +20,14 @@ pub trait UiExt: Sealed {
     where
         S: TextBuffer;
 
+    /// Add an element using both [`UiExt::add_with_width`] and [`Ui::add_enabled`].
+    fn add_enabled_with_width(
+        &mut self,
+        enabled: bool,
+        width: f32,
+        widget: impl Widget,
+    ) -> Response;
+
     /// Add an element using both [`Ui::add_sized`] and [`Ui::add_enabled`].
     fn add_enabled_with_size(
         &mut self,
@@ -51,6 +59,15 @@ impl UiExt for Ui {
             Vec2::new(width, self.spacing().interact_size.y),
             crate::widgets::TextEdit::singleline(text),
         )
+    }
+
+    fn add_enabled_with_width(
+        &mut self,
+        enabled: bool,
+        width: f32,
+        widget: impl Widget,
+    ) -> Response {
+        self.add_enabled_with_size(enabled, Vec2::new(width, self.available_height()), widget)
     }
 
     fn add_enabled_with_size(
