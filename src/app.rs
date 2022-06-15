@@ -132,8 +132,18 @@ pub trait App {
     /// The inital page the application should open.
     fn initial_page(&mut self) -> Box<dyn Page>;
 
-    /// Called to save state, this is called before [`App::on_exit`].
-    fn save(&mut self, _state: &Box<dyn Any>) {}
+    /// Run global app initialization, this is guaranteed to only be called once before the first render.
+    ///
+    /// If this returns an error, the application will exit after the user has confirmed the error prompt.
+    fn init(&mut self) -> crate::Switch {
+        Ok(None)
+    }
+
+    /// Called directly before a render
+    ///     (note that this is called **before** handling any errors the previous render call may have generated).
+    fn on_render(&mut self, _ctx: &eframe::egui::Context) -> crate::Switch {
+        Ok(None)
+    }
 
     /// Called on shutdown.
     fn on_exit(&mut self) {}
@@ -142,6 +152,10 @@ pub trait App {
 pub(crate) struct Application {
     /// Whether the init method has been run for the current page
     init: bool,
+    /// Whether the init method has been run for the global application
+    global_init: bool,
+    /// Whether the program should exit after the next error has been confirmed
+    exit_after_error: bool,
     app: Box<dyn App>,
     page: Box<dyn Page>,
     repainter: Repainter,
@@ -194,6 +208,8 @@ impl Application {
 
                 let mut application = Application {
                     init: false,
+                    global_init: false,
+                    exit_after_error: false,
                     page: app.initial_page(),
                     app,
                     repainter,
@@ -217,11 +233,20 @@ impl Application {
 
 impl eframe::App for Application {
     fn on_exit(&mut self, _gl: &eframe::glow::Context) {
-        self.app.save(&self.state);
         self.app.on_exit();
     }
 
     fn update(&mut self, ctx: &eframe::egui::Context, frame: &mut eframe::Frame) {
+        if !self.global_init {
+            self.global_init = true;
+
+            let res = self.app.init();
+            if res.is_err() {
+                self.exit_after_error = true;
+            }
+            self.process(res);
+        }
+
         let name = self.page.name();
         let _span = span!(tracing::Level::DEBUG, "{}", name).entered();
 
@@ -247,6 +272,9 @@ impl eframe::App for Application {
             }};
         }
 
+        let res = self.app.on_render(ctx);
+        self.process(res);
+
         if let Some(ref err) = self.error {
             let err = err.to_string();
             eframe::egui::Window::new("Error").show(ctx, |ui| {
@@ -256,7 +284,12 @@ impl eframe::App for Application {
                         let res = self.page.on_error(err);
                         self.process(res);
                     }
+
                     self.error = None;
+
+                    if self.exit_after_error {
+                        frame.quit();
+                    }
                 }
             });
 
