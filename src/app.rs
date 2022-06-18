@@ -117,8 +117,8 @@ pub struct UpdateContext<'u> {
     pub ui: &'u mut Ui,
     /// The application view.
     pub view: &'u mut View,
-    /// The application.
-    pub app: &'u mut Box<dyn App>,
+    // /// The application.
+    // pub app: &'u mut Box<dyn App>,
     /// The application state.
     /// This should not be used directly. Use [`crate::use_state`] instead.
     ///
@@ -141,11 +141,7 @@ pub trait App {
 
     /// Called directly before a render
     ///     (note that this is called **before** handling any errors the previous render call may have generated).
-    fn on_render(
-        &mut self,
-        _ctx: &eframe::egui::Context,
-        _state: &mut Box<dyn Any>,
-    ) -> crate::Switch {
+    fn on_render(&mut self, _ctx: UpdateContext) -> crate::Switch {
         Ok(None)
     }
 
@@ -264,7 +260,7 @@ impl eframe::App for Application {
                     runtime: &self.runtime,
                     ui: $ui,
                     view: &mut self.view,
-                    app: &mut self.app,
+                    // app: &mut self.app,
                     state: &mut self.state,
                 }
             };
@@ -276,8 +272,24 @@ impl eframe::App for Application {
             }};
         }
 
-        let res = self.app.on_render(ctx, &mut self.state);
-        self.process(res);
+        // Handle render hook
+        {
+            // Create a blank Ui instance specifically for the render hook (writes to this will not be visible)
+            let ui = &mut Ui::new(
+                ctx.clone(),
+                crate::widgets::LayerId::new(
+                    crate::widgets::Order::Background,
+                    crate::widgets::Id::null(),
+                ),
+                crate::widgets::Id::null(),
+                crate::Rect::NOTHING,
+                crate::Rect::NOTHING,
+            );
+
+            let ctx = bind!(ui);
+            let res = self.app.on_render(ctx);
+            self.process(res);
+        }
 
         if let Some(ref err) = self.error {
             let err = err.to_string();
